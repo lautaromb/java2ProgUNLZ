@@ -1,8 +1,6 @@
 package sistema;
 
-import modelo.Cliente;
-import modelo.Empleado;
-import modelo.Usuario;
+import modelo.*;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -10,14 +8,21 @@ import java.util.Scanner;
 public class Sistema {
 
     private ArrayList<Usuario> usuarios;
+    private ArrayList<Articulo> articulos;
     private Scanner scanner;
+// TEst
+    Usuario ejemplo1 =  new Empleado("Juan","123");
+
 
     //clave requerida en el TP Final
     private final String CLAVE_EMPLEADO = "pepepiola123";
 
     public Sistema() {
         usuarios = new ArrayList<>();
+        articulos = new ArrayList<>();
         scanner = new Scanner(System.in);
+        usuarios.add(ejemplo1);
+
     }
 
     // ---------------------------------------------
@@ -90,6 +95,121 @@ public class Sistema {
         for (Usuario u : usuarios) {
             if (u.getNombreUsuario().equalsIgnoreCase(nombre)) {
                 return u;
+            }
+        }
+        return null;
+    }
+
+    // ==============================
+    // ABM ARTÍCULOS
+    // ==============================
+    public void agregarArticulo() {
+        System.out.println("=== Alta de artículo ===");
+        System.out.print("Código: ");
+        String codigo = scanner.nextLine();
+
+        if (!codigo.matches("[a-zA-Z0-9]+")) {
+            System.out.println("❌ Código inválido. Solo se permiten letras y números.");
+            return;
+        } else {
+            System.out.println("Código válido: " + codigo);
+        }
+
+        if (buscarArticulo(codigo) != null) {
+            System.out.println("❌ Ya existe un artículo con ese código.");
+            return;
+        }
+
+        System.out.print("Descripción: ");
+        String descripcion = scanner.nextLine();
+
+        System.out.print("Precio neto: ");
+        double precio = Double.parseDouble(scanner.nextLine());
+
+        System.out.print("Stock: ");
+        int stock = Integer.parseInt(scanner.nextLine());
+
+        RubroArticulo rubro = null;
+        while (rubro == null){
+            System.out.println("Rubro (A: Alimentos, B: Electrónica, C: Hogar): ");
+            rubro = RubroArticulo.desdeLetra(scanner.nextLine());
+        }
+
+        System.out.println("Tipo de artículo (1: SIMPLE, 2: SUBSIDIADO, 3: POR_DEMANDA): ");
+        int tipoNum = Integer.parseInt(scanner.nextLine());
+        TipoArticulo tipo = TipoArticulo.SIMPLE;
+        if (tipoNum == 2) tipo = TipoArticulo.SUBSIDIADO;
+        if (tipoNum == 3) tipo = TipoArticulo.POR_DEMANDA;
+
+        Articulo articulo = new Articulo(codigo, descripcion, precio, stock, rubro, tipo);
+
+        if (tipo == TipoArticulo.POR_DEMANDA) {
+            System.out.print("Stock deseado: ");
+            articulo.setStockDeseado(Integer.parseInt(scanner.nextLine()));
+        }
+
+        articulos.add(articulo);
+        System.out.println("✅ Artículo agregado correctamente.");
+    }
+
+    public void listarArticulos() {
+        System.out.println("=== Listado de artículos ===");
+        if (articulos.isEmpty()) {
+            System.out.println("No hay artículos cargados.");
+            return;
+        }
+        for (Articulo a : articulos) {
+            System.out.println(a);
+        }
+    }
+
+    public void editarArticulo() {
+        System.out.println("=== Editar artículo ===");
+        System.out.print("Código: ");
+        String codigo = scanner.nextLine();
+
+        Articulo a = buscarArticulo(codigo);
+        if (a == null) {
+            System.out.println("❌ No existe un artículo con ese código.");
+            return;
+        }
+
+        System.out.print("Nueva descripción: ");
+        a.setDescripcion(scanner.nextLine());
+
+        System.out.print("Nuevo precio neto: ");
+        a.setPrecioNeto(Double.parseDouble(scanner.nextLine()));
+
+        System.out.print("Nuevo stock: ");
+        a.setStock(Integer.parseInt(scanner.nextLine()));
+
+        if (a.getTipo() == TipoArticulo.POR_DEMANDA) {
+            System.out.print("Nuevo stock deseado: ");
+            a.setStockDeseado(Integer.parseInt(scanner.nextLine()));
+        }
+
+        System.out.println("✅ Artículo modificado correctamente.");
+    }
+
+    public void eliminarArticulo() {
+        System.out.println("=== Eliminar artículo ===");
+        System.out.print("Código: ");
+        String codigo = scanner.nextLine();
+
+        Articulo a = buscarArticulo(codigo);
+        if (a == null) {
+            System.out.println("❌ No existe un artículo con ese código.");
+            return;
+        }
+
+        articulos.remove(a);
+        System.out.println("✅ Artículo eliminado.");
+    }
+
+    private Articulo buscarArticulo(String codigo) {
+        for (Articulo a : articulos) {
+            if (a.getCodigo().equalsIgnoreCase(codigo)) {
+                return a;
             }
         }
         return null;

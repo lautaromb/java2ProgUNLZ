@@ -76,4 +76,11 @@ public class Articulo {
                 " | Tipo: " + tipo.name();
     }
 
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public void setPrecioNeto(double precioNeto) {
+        this.precioNeto = precioNeto;
+    }
 }

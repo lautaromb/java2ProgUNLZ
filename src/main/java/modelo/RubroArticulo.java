@@ -23,12 +23,21 @@ public enum RubroArticulo {
         return descuentoSubsidiado;
     }
 
-    public static RubroArticulo desdeLetra(String letra) {
-        for (RubroArticulo r : RubroArticulo.values()) {
-            if (String.valueOf(r.letra).equalsIgnoreCase(letra)) {
-                return r;
-            }
+    public static RubroArticulo desdeLetra(String opcion) {
+        if (opcion == null || opcion.isEmpty()) {
+            throw new IllegalArgumentException("❌ Debes ingresar una opción.");
         }
-        return null;
+
+        // Tomar solo la primera letra, ignorando mayúsculas
+        char letra = Character.toUpperCase(opcion.trim().charAt(0));
+
+        switch (letra) {
+            case 'A': return RubroArticulo.ALIMENTOS;
+            case 'B': return RubroArticulo.ELECTRONICA;
+            case 'C': return RubroArticulo.HOGAR;
+            default:
+                System.out.println("❌ Código inválido. Solo se permiten letras y números.");
+                return null;
+        }
     }
 }
