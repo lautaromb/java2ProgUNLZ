@@ -1,10 +1,10 @@
 package org.example;
 
+import java.util.Scanner;
+
 import modelo.Empleado;
 import modelo.Usuario;
 import sistema.Sistema;
-
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
@@ -94,10 +94,14 @@ public class Main {
     // ==============================
     private static void menuCliente(Sistema sistema, Scanner scanner, Usuario usuario) {
         while (true) {
+
             System.out.println("\n=== MENÚ CLIENTE ===");
             System.out.println("1. Listar artículos disponibles");
             System.out.println("2. Consultar saldo");
-            // más adelante: agregar dinero, retirar, transferir, carrito
+            System.out.println("3. Agregar dinero");
+            System.out.println("4. Retirar dinero");
+            System.out.println("5. Transferir saldo");
+            System.out.println("6. Comprar artículo");
             System.out.println("0. Cerrar sesión");
             System.out.print("Opción: ");
             String opcion = scanner.nextLine();
@@ -109,9 +113,21 @@ public class Main {
                 case "2":
                     System.out.println("💰 Saldo actual: $" + usuario.getSaldo());
                     break;
+                case "3":
+                    sistema.agregarDinero(usuario, scanner);
+                    break;
+                case "4":
+                    sistema.retirarDinero(usuario, scanner);
+                    break;
+                case "5":
+                    sistema.transferirSaldo(usuario, scanner);
+                    break;
+                case "6":
+                    sistema.comprarArticulo(usuario, scanner);
+                    break;
                 case "0":
                     System.out.println("🔒 Sesión cerrada.");
-                    return; // vuelve al menú principal
+                    return;
                 default:
                     System.out.println("❌ Opción inválida.");
             }

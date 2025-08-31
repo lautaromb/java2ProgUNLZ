@@ -1,9 +1,14 @@
 package sistema;
 
-import modelo.*;
-
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import modelo.Articulo;
+import modelo.Cliente;
+import modelo.Empleado;
+import modelo.RubroArticulo;
+import modelo.TipoArticulo;
+import modelo.Usuario;
 
 public class Sistema {
 
@@ -214,4 +219,117 @@ public class Sistema {
         }
         return null;
     }
+
+
+    // SALDO
+    public void agregarDinero(Usuario usuario, Scanner scanner) {
+        System.out.print("Ingrese el monto a agregar: ");
+        String input = scanner.nextLine().trim();
+        double monto;
+        try {
+            monto = Double.parseDouble(input);
+            if (monto <= 0) {
+                System.out.println("❌ El monto debe ser mayor a 0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Ingrese un número válido.");
+            return;
+        }
+        usuario.agregarSaldo(usuario.getSaldo() + monto);
+        System.out.println("✅ Dinero agregado correctamente. Saldo actual: $" + usuario.getSaldo());
+    }
+
+    public void retirarDinero(Usuario usuario, Scanner scanner) {
+    System.out.print("Ingrese el monto a retirar: ");
+    String input = scanner.nextLine().trim();
+    double monto;
+    try {
+        monto = Double.parseDouble(input);
+        if (monto <= 0) {
+            System.out.println("❌ El monto debe ser mayor a 0.");
+            return;
+        }
+    } catch (NumberFormatException e) {
+        System.out.println("❌ Ingrese un número válido.");
+        return;
+    }
+    if (usuario.retirarSaldo(monto)) {
+        System.out.println("✅ Dinero retirado correctamente. Saldo actual: $" + usuario.getSaldo());
+    } else {
+        System.out.println("❌ Saldo insuficiente.");
+    }
+}
+
+
+    public void transferirSaldo(Usuario usuario, Scanner scanner) {
+        System.out.print("Ingrese el nombre del usuario destino: ");
+        String destinoNombre = scanner.nextLine().trim();
+        Usuario destino = buscarUsuario(destinoNombre);
+        if (destino == null) {
+            System.out.println("❌ No existe un usuario con ese nombre.");
+            return;
+        }
+        if (destino == usuario) {
+            System.out.println("❌ No puedes transferirte a ti mismo.");
+            return;
+        }
+
+        System.out.print("Ingrese el monto a transferir: ");
+        String input = scanner.nextLine().trim();
+        double monto;
+        try {
+            monto = Double.parseDouble(input);
+            if (monto <= 0) {
+                System.out.println("❌ El monto debe ser mayor a 0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Ingrese un número válido.");
+            return;
+        }
+
+        if (usuario.retirarSaldo(monto)) {
+            destino.agregarSaldo(monto);
+            System.out.println("✅ Dinero transferido correctamente. Saldo actual: $" + usuario.getSaldo());
+        } else {
+            System.out.println("❌ Saldo insuficiente.");
+        }
+    }
+
+    public void comprarArticulo(Usuario usuario, Scanner scanner) {
+        System.out.print("Ingrese el código del artículo a comprar: ");
+        String codigo = scanner.nextLine().trim();
+        Articulo articulo = buscarArticulo(codigo);
+        if (articulo == null) {
+            System.out.println("❌ No existe un artículo con ese código.");
+            return;
+        }
+        System.out.print("Ingrese la cantidad a comprar: ");
+        String input = scanner.nextLine().trim();
+        int cantidad;
+        try {
+            cantidad = Integer.parseInt(input);
+            if (cantidad <= 0) {
+                System.out.println("❌ La cantidad debe ser mayor a 0.");
+                return;
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Ingrese un número válido.");
+            return;
+        }
+        if (articulo.getStock() < cantidad) {
+            System.out.println("❌ Stock insuficiente. Stock disponible: " + articulo.getStock());
+            return;
+        }
+        double total = articulo.getPrecioFinal() * cantidad;
+        if (usuario.getSaldo() < total) {
+            System.out.println("❌ Saldo insuficiente. Total de la compra: $" + total + ", Saldo actual: $" + usuario.getSaldo());
+            return;
+        }
+        usuario.retirarSaldo(total);
+        articulo.setStock(articulo.getStock() - cantidad);
+        System.out.println("✅ Compra realizada correctamente. Total: $" + total + ", Saldo restante: $" + usuario.getSaldo());
+    }
+
 }
