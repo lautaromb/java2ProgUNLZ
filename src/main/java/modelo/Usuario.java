@@ -38,10 +38,18 @@ public abstract class Usuario {
         return false;
     }
 
+    public String getContrasena(){
+        return contrasena;
+    }
+
     public void transferirSaldo(Usuario destino, double monto) {
         if (retirarSaldo(monto)) {
             destino.agregarSaldo(monto);
         }
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
     }
 
     public abstract boolean esEmpleado();

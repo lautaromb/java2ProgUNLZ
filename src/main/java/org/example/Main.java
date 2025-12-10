@@ -48,7 +48,7 @@ public class Main {
                     System.out.println("¡Hasta luego!");
                     return;
                 default:
-                    System.out.println("❌ Opción inválida.");
+                    System.out.println(" Opción inválida.");
             }
         }
 
@@ -81,10 +81,10 @@ public class Main {
                     sistema.listarArticulos();
                     break;
                 case "0":
-                    System.out.println("🔒 Sesión cerrada.");
+                    System.out.println(" Sesión cerrada.");
                     return; // vuelve al menú principal
                 default:
-                    System.out.println("❌ Opción inválida.");
+                    System.out.println(" Opción inválida.");
             }
         }
     }
@@ -111,7 +111,7 @@ public class Main {
                     sistema.listarArticulos();
                     break;
                 case "2":
-                    System.out.println("💰 Saldo actual: $" + usuario.getSaldo());
+                    System.out.println(" Saldo actual: $" + usuario.getSaldo());
                     break;
                 case "3":
                     sistema.agregarDinero(usuario, scanner);
@@ -123,13 +123,13 @@ public class Main {
                     sistema.transferirSaldo(usuario, scanner);
                     break;
                 case "6":
-                    sistema.comprarArticulo(usuario, scanner);
+                    sistema.gestionarCarrito(usuario, scanner);
                     break;
                 case "0":
-                    System.out.println("🔒 Sesión cerrada.");
+                    System.out.println(" Sesión cerrada.");
                     return;
                 default:
-                    System.out.println("❌ Opción inválida.");
+                    System.out.println(" Opción inválida.");
             }
         }
     }

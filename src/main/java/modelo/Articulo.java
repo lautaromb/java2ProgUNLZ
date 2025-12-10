@@ -83,4 +83,8 @@ public class Articulo {
     public void setPrecioNeto(double precioNeto) {
         this.precioNeto = precioNeto;
     }
+
+    public double getPrecioNeto() {
+        return precioNeto;
+    }
 }
