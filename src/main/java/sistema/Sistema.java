@@ -12,9 +12,6 @@ public class Sistema {
     private ArrayList<Articulo> articulos;
     private Scanner scanner;
 
-// TEst
-    Usuario ejemplo1 =  new Empleado("Juan","123");
-
 
     //clave requerida en el TP Final
     private final String CLAVE_EMPLEADO = "pepepiola123";
@@ -22,23 +19,17 @@ public class Sistema {
     public Sistema() {
         scanner = new Scanner(System.in);
 
-        // AQUÍ se cargan los datos desde los archivos
+        // Carga de archivos
         usuarios = GestorArchivos.cargarUsuarios();      // Lee usuarios.txt
         articulos = GestorArchivos.cargarArticulos();    // Lee articulos.txt
-
-        // Si no hay usuarios, agregar el de ejemplo
-        if (usuarios.isEmpty()) {
-            usuarios.add(ejemplo1);
-        }
 
         System.out.println("Datos cargados correctamente.");
     }
 
-    // ---------------------------------------------
+
     // REGISTRO DE USUARIOS
-    // ---------------------------------------------
     public void registrarUsuario() {
-        System.out.println("=== Registro de usuario ===");
+        System.out.println("   Registro de usuario   ");
         System.out.print("Ingrese nombre de usuario: ");
         String nombre = scanner.nextLine();
 
@@ -89,11 +80,9 @@ public class Sistema {
         }
     }
 
-    // ---------------------------------------------
     // LOGIN
-    // ---------------------------------------------
     public Usuario login() {
-        System.out.println("=== Iniciar sesión ===");
+        System.out.println("   Iniciar sesión   ");
         System.out.print("Usuario: ");
         String nombre = scanner.nextLine();
         System.out.print("Contraseña: ");
@@ -109,9 +98,7 @@ public class Sistema {
         }
     }
 
-    // ---------------------------------------------
     // BUSCAR USUARIO POR NOMBRE
-    // ---------------------------------------------
     private Usuario buscarUsuario(String nombre) {
         for (Usuario u : usuarios) {
             if (u.getNombreUsuario().equalsIgnoreCase(nombre)) {
@@ -121,11 +108,10 @@ public class Sistema {
         return null;
     }
 
-    // ==============================
+
     // ABM ARTÍCULOS
-    // ==============================
     public void agregarArticulo() {
-        System.out.println("=== Alta de artículo ===");
+        System.out.println("   Alta de artículo   ");
         System.out.print("Código: ");
         String codigo = scanner.nextLine();
 
@@ -200,7 +186,7 @@ public class Sistema {
     }
 
     public void listarArticulos() {
-        System.out.println("=== Listado de artículos ===");
+        System.out.println("   Listado de artículos   ");
         if (articulos.isEmpty()) {
             System.out.println("No hay artículos cargados.");
             return;
@@ -211,7 +197,7 @@ public class Sistema {
     }
 
     public void editarArticulo() {
-        System.out.println("=== Editar artículo ===");
+        System.out.println("   Editar artículo   ");
         System.out.print("Código: ");
         String codigo = scanner.nextLine();
 
@@ -375,47 +361,12 @@ public class Sistema {
     }
 
 
-    public void comprarArticulo(Usuario usuario, Scanner scanner) {
-        System.out.print("Ingrese el código del artículo a comprar: ");
-        String codigo = scanner.nextLine().trim();
-        Articulo articulo = buscarArticulo(codigo);
-        if (articulo == null) {
-            System.out.println(" No existe un artículo con ese código.");
-            return;
-        }
-        System.out.print("Ingrese la cantidad a comprar: ");
-        String input = scanner.nextLine().trim();
-        int cantidad;
-        try {
-            cantidad = Integer.parseInt(input);
-            if (cantidad <= 0) {
-                System.out.println(" La cantidad debe ser mayor a 0.");
-                return;
-            }
-        } catch (NumberFormatException e) {
-            System.out.println(" Ingrese un número válido.");
-            return;
-        }
-        if (articulo.getStock() < cantidad) {
-            System.out.println(" Stock insuficiente. Stock disponible: " + articulo.getStock());
-            return;
-        }
-        double total = articulo.getPrecioFinal() * cantidad;
-        if (usuario.getSaldo() < total) {
-            System.out.println(" Saldo insuficiente. Total de la compra: $" + total + ", Saldo actual: $" + usuario.getSaldo());
-            return;
-        }
-        usuario.retirarSaldo(total);
-        articulo.setStock(articulo.getStock() - cantidad);
-        System.out.println(" Compra realizada correctamente. Total: $" + total + ", Saldo restante: $" + usuario.getSaldo());
-    }
-
     public void gestionarCarrito(Usuario usuario, Scanner scanner) {
         CarritoCompras carrito = new CarritoCompras();
         boolean finalizarCompra = false;
 
         while (!finalizarCompra) {
-            System.out.println("\n          GESTION DE CARRITO                           ");
+            System.out.println("\n          GESTION DE CARRITO              ");
             System.out.println("1. Agregar articulo al carrito");
             System.out.println("2. Ver carrito");
             System.out.println("3. Finalizar compra");
@@ -450,47 +401,47 @@ public class Sistema {
 
     private void agregarAlCarrito(CarritoCompras carrito, Scanner scanner) {
         // primero mostramos todos los articulos disponibles
-        System.out.println("\n=== Articulos disponibles ===");
+        System.out.println("\n   Articulos disponibles    ");
         listarArticulos();
 
-        System.out.print("\nIngrese el codigo del articulo: ");
+        System.out.print("\n  Ingrese el codigo del articulo: ");
         String codigo = scanner.nextLine().trim();
 
         Articulo articulo = buscarArticulo(codigo);
         if (articulo == null) {
-            System.out.println("No existe un articulo con ese codigo.");
+            System.out.println("  No existe un articulo con ese codigo.");
             return;
         }
 
-        System.out.print("Ingrese la cantidad: ");
+        System.out.print("  Ingrese la cantidad: ");
         String input = scanner.nextLine().trim();
         int cantidad;
 
         try {
             cantidad = Integer.parseInt(input);
             if (cantidad <= 0) {
-                System.out.println("La cantidad debe ser mayor a 0.");
+                System.out.println("  La cantidad debe ser mayor a 0.");
                 return;
             }
         } catch (NumberFormatException e) {
-            System.out.println("Ingrese un numero valido.");
+            System.out.println("  Ingrese un numero valido.");
             return;
         }
 
         // validar que hay stock
         if (articulo.getStock() < cantidad) {
-            System.out.println("Stock insuficiente. Stock disponible: " + articulo.getStock());
+            System.out.println("  Stock insuficiente. Stock disponible: " + articulo.getStock());
             return;
         }
 
         carrito.agregarArticulo(articulo, cantidad);
-        System.out.println("Articulo agregado al carrito.");
-        System.out.println("Total actual del carrito: $" + carrito.calcularTotal());
+        System.out.println("  Articulo agregado al carrito.");
+        System.out.println("  Total actual del carrito: $" + carrito.calcularTotal());
     }
 
     private boolean finalizarCompra(CarritoCompras carrito, Usuario usuario) {
         if (carrito.estaVacio()) {
-            System.out.println("El carrito esta vacio.");
+            System.out.println("  El carrito esta vacio.");
             return false;
         }
 
@@ -501,13 +452,13 @@ public class Sistema {
 
         // mostrar resumen
         carrito.mostrarCarrito();
-        System.out.println("\nSu saldo actual es: $" + usuario.getSaldo());
+        System.out.println("\n  Su saldo actual es: $" + usuario.getSaldo());
 
         double total = carrito.calcularTotal();
 
         // verificar saldo suficiente
         if (usuario.getSaldo() < total) {
-            System.out.println("\nSaldo insuficiente para completar la compra.");
+            System.out.println("\n  Saldo insuficiente para completar la compra.");
             System.out.println("   Necesita: $" + total);
             System.out.println("   Su saldo: $" + usuario.getSaldo());
             System.out.println("   Faltan: $" + (total - usuario.getSaldo()));
@@ -533,8 +484,81 @@ public class Sistema {
 
         // mostrar factura
         carrito.mostrarFactura();
-        System.out.println("\nSaldo restante: $" + usuario.getSaldo());
+        System.out.println("\n  Saldo restante: $" + usuario.getSaldo());
+
+        // Verificar que sea un cliente antes de agregar al historial
+        if (!usuario.esEmpleado()) {
+            String fecha = java.time.LocalDateTime.now().format(
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")
+            );
+            String resumen = fecha + " - Total: $" + total +
+                    " (" + carrito.getItems().size() + " items)";
+            ((Cliente) usuario).agregarCompraAlHistorial(resumen);
+        }
 
         return true;
+    }
+
+    // MODULO DE STOCK (Punto 3 del TP)
+    public void gestionarStock() {
+        while (true) {
+            System.out.println("\n=== Gestion de Stock ===");
+            System.out.println("1. Ver stock de todos los articulos");
+            System.out.println("2. Editar stock de un articulo");
+            System.out.println("0. Volver");
+            System.out.print("Opcion: ");
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1":
+                    verStock();
+                    break;
+                case "2":
+                    editarStock();
+                    break;
+                case "0":
+                    return;
+                default:
+                    System.out.println("Opcion invalida.");
+            }
+        }
+    }
+
+    private void verStock() {
+        System.out.println("\n=== Stock de articulos ===");
+        if (articulos.isEmpty()) {
+            System.out.println("No hay articulos cargados.");
+            return;
+        }
+        for (Articulo a : articulos) {
+            System.out.println(a.getCodigo() + " - " + a.getDescripcion() +
+                    " | Stock: " + a.getStock());
+        }
+    }
+
+    private void editarStock() {
+        System.out.print("Ingrese codigo del articulo: ");
+        String codigo = scanner.nextLine();
+
+        Articulo a = buscarArticulo(codigo);
+        if (a == null) {
+            System.out.println("No existe un articulo con ese codigo.");
+            return;
+        }
+
+        System.out.println("Stock actual: " + a.getStock());
+        System.out.print("Nuevo stock: ");
+        try {
+            int nuevoStock = Integer.parseInt(scanner.nextLine());
+            if (nuevoStock < 0) {
+                System.out.println("El stock no puede ser negativo.");
+                return;
+            }
+            a.setStock(nuevoStock);
+            System.out.println("Stock actualizado correctamente.");
+            GestorArchivos.guardarArticulos(articulos);
+        } catch (NumberFormatException e) {
+            System.out.println("Ingrese un numero valido.");
+        }
     }
 }

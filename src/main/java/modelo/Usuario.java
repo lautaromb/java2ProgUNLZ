@@ -2,8 +2,6 @@ package modelo;
 
 public abstract class Usuario {
 
-
-
     protected String nombreUsuario;
     protected String contrasena;
     protected double saldo;

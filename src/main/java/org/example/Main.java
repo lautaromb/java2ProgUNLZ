@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.Scanner;
 
+import modelo.Cliente;
 import modelo.Empleado;
 import modelo.Usuario;
 import sistema.Sistema;
@@ -63,6 +64,7 @@ public class Main {
             System.out.println("2. Editar artículo");
             System.out.println("3. Eliminar artículo");
             System.out.println("4. Listar artículos");
+            System.out.println("5. Gestionar Stock");
             System.out.println("0. Cerrar sesión");
             System.out.print("Opción: ");
             String opcion = scanner.nextLine();
@@ -80,6 +82,9 @@ public class Main {
                 case "4":
                     sistema.listarArticulos();
                     break;
+                case "5":
+                    sistema.gestionarStock();
+                    break;
                 case "0":
                     System.out.println(" Sesión cerrada.");
                     return; // vuelve al menú principal
@@ -89,19 +94,19 @@ public class Main {
         }
     }
 
-    // ==============================
+
     // MENÚ CLIENTE
-    // ==============================
     private static void menuCliente(Sistema sistema, Scanner scanner, Usuario usuario) {
         while (true) {
 
-            System.out.println("\n=== MENÚ CLIENTE ===");
+            System.out.println("\n   MENÚ CLIENTE   ");
             System.out.println("1. Listar artículos disponibles");
             System.out.println("2. Consultar saldo");
             System.out.println("3. Agregar dinero");
             System.out.println("4. Retirar dinero");
             System.out.println("5. Transferir saldo");
             System.out.println("6. Comprar artículo");
+            System.out.println("7. Historial Compra");
             System.out.println("0. Cerrar sesión");
             System.out.print("Opción: ");
             String opcion = scanner.nextLine();
@@ -124,6 +129,9 @@ public class Main {
                     break;
                 case "6":
                     sistema.gestionarCarrito(usuario, scanner);
+                    break;
+                case "7":
+                    ((Cliente) usuario).mostrarHistorial();
                     break;
                 case "0":
                     System.out.println(" Sesión cerrada.");
