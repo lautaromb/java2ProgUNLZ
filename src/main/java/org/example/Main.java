@@ -2,22 +2,27 @@ package org.example;
 
 import java.util.Scanner;
 
-import modelo.Cliente;
-import modelo.Empleado;
-import modelo.Usuario;
+import memoria.GestorArchivos;
+import modelo.*;
 import sistema.Sistema;
 
 public class Main {
     public static void main(String[] args) {
-
-        System.out.println("Hello world!");
 
         Sistema sistema = new Sistema();
         Scanner scanner = new Scanner(System.in);
         Usuario usuarioLogueado = null;
         boolean logged = false;
 
-        Usuario ejemplo1 =  new Empleado("Juan","123");
+        Articulo a1 = new Articulo("A1","Pelota", 1000.0,10, RubroArticulo.HOGAR, TipoArticulo.SIMPLE);
+        Articulo a2 = new Articulo("A2","Auricular", 5000.0,20, RubroArticulo.ELECTRONICA, TipoArticulo.POR_DEMANDA);
+        Articulo a3 = new Articulo("A3","Queso", 1000.0,10, RubroArticulo.ALIMENTOS, TipoArticulo.SUBSIDIADO);
+
+        sistema.agregarInicialSiNoExiste(a1);
+        sistema.agregarInicialSiNoExiste(a2);
+        sistema.agregarInicialSiNoExiste(a3);
+
+        sistema.guardarArticulos();
 
         while (!logged) {
             System.out.println("\n1. Registrarse");
@@ -59,7 +64,7 @@ public class Main {
     // ==============================
     private static void menuEmpleado(Sistema sistema, Scanner scanner) {
         while (true) {
-            System.out.println("\n=== MENÚ EMPLEADO ===");
+            System.out.println("\n    MENÚ EMPLEADO  ");
             System.out.println("1. Alta de artículo");
             System.out.println("2. Editar artículo");
             System.out.println("3. Eliminar artículo");

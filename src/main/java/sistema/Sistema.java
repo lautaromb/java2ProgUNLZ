@@ -3,7 +3,7 @@ package sistema;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import Memoria.GestorArchivos;
+import memoria.GestorArchivos;
 import modelo.*;
 
 public class Sistema {
@@ -30,53 +30,95 @@ public class Sistema {
     // REGISTRO DE USUARIOS
     public void registrarUsuario() {
         System.out.println("   Registro de usuario   ");
-        System.out.print("Ingrese nombre de usuario: ");
-        String nombre = scanner.nextLine();
+
+        // Validar nombre no vacío + longitud minima y maxima
+        String nombre = "";
+        while (true) {
+            System.out.print("Ingrese nombre de usuario: ");
+            nombre = scanner.nextLine().trim();
+
+            if (nombre.isEmpty()) {
+                System.out.println("El nombre no puede estar vacío.");
+                continue;
+            }
+            if (nombre.length() < 5) {
+                System.out.println("El nombre debe tener como mínimo 5 caracteres.");
+                continue;
+            }
+            if (nombre.length() > 20) {
+                System.out.println("El nombre no puede superar los 20 caracteres.");
+                continue;
+            }
+            break;
+        }
 
         // Validar si ya existe
         if (buscarUsuario(nombre) != null) {
-            System.out.println(" Ya existe un usuario con ese nombre.");
+            System.out.println("Ya existe un usuario con ese nombre.");
             return;
         }
 
-        System.out.print("Ingrese contraseña: ");
-        String pass1 = scanner.nextLine();
+        // Validar contraseña no vacía + mín 5, máx 20
+        String pass1 = "";
+        while (true) {
+            System.out.print("Ingrese contraseña: ");
+            pass1 = scanner.nextLine().trim();
 
+            if (pass1.isEmpty()) {
+                System.out.println("La contraseña no puede estar vacía.");
+                continue;
+            }
+            if (pass1.length() < 5) {
+                System.out.println("La contraseña debe tener como mínimo 5 caracteres.");
+                continue;
+            }
+            if (pass1.length() > 20) {
+                System.out.println("La contraseña no puede superar los 20 caracteres.");
+                continue;
+            }
+            break;
+        }
+
+        // Repetir contraseña
         System.out.print("Repita la contraseña: ");
-        String pass2 = scanner.nextLine();
+        String pass2 = scanner.nextLine().trim();
 
         if (!pass1.equals(pass2)) {
-            System.out.println(" Las contraseñas no coinciden.");
+            System.out.println("Las contraseñas no coinciden.");
             return;
         }
 
+        // Validar s/n
         String esEmpleado;
-
         while (true) {
             System.out.print("¿Es empleado? (s/n): ");
             esEmpleado = scanner.nextLine().trim().toLowerCase();
 
             if (esEmpleado.equals("s") || esEmpleado.equals("n")) {
-                break; // valor válido → salimos del bucle
+                break;
             }
 
-            System.out.println(" Opción inválida. Por favor ingrese 's' o 'n'.");
+            System.out.println("Opción inválida. Ingrese 's' o 'n'.");
         }
 
+        // Registrar empleado
         if (esEmpleado.equals("s")) {
             System.out.print("Ingrese clave de empleado: ");
-            String clave = scanner.nextLine();
+            String clave = scanner.nextLine().trim();
+
             if (!clave.equals(CLAVE_EMPLEADO)) {
-                System.out.println(" Clave de empleado incorrecta.");
+                System.out.println("Clave de empleado incorrecta.");
                 return;
             }
+
             usuarios.add(new Empleado(nombre, pass1));
             GestorArchivos.guardarUsuarios(usuarios);
-            System.out.println(" Empleado registrado correctamente.");
+            System.out.println("Empleado registrado correctamente.");
         } else {
+            // Registrar cliente
             usuarios.add(new Cliente(nombre, pass1));
             GestorArchivos.guardarUsuarios(usuarios);
-            System.out.println(" Cliente registrado correctamente.");
+            System.out.println("Cliente registrado correctamente.");
         }
     }
 
@@ -118,7 +160,13 @@ public class Sistema {
         if (!codigo.matches("[a-zA-Z0-9]+")) {
             System.out.println(" Código inválido. Solo se permiten letras y números.");
             return;
-        } else {
+
+        }
+        if (codigo.length() < 2 || codigo.length() > 6){
+            System.out.println(" Código inválido. Mínimo 2 caracteres y máximo 6");
+            return;
+        }
+        else {
             System.out.println("Código válido: " + codigo);
         }
 
@@ -127,14 +175,41 @@ public class Sistema {
             return;
         }
 
-        System.out.print("Descripción: ");
-        String descripcion = scanner.nextLine();
+        String descripcion = "";
+        while (descripcion.trim().isEmpty()) {
+            System.out.print("Descripción: ");
+            descripcion = scanner.nextLine();
 
-        System.out.print("Precio neto: ");
-        double precio = Double.parseDouble(scanner.nextLine());
+            if (descripcion.trim().isEmpty()) {
+                System.out.println(" La descripción no puede estar vacía.");
+            }
+        }
 
-        System.out.print("Stock: ");
-        int stock = Integer.parseInt(scanner.nextLine());
+        double precio = 0.25;
+        while (precio <= 0.25) {
+            System.out.print("Precio neto: ");
+            try {
+                precio = Double.parseDouble(scanner.nextLine());
+                if (precio <= 0.25) {
+                    System.out.println(" El precio no valido.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(" Debes ingresar un número válido.");
+            }
+        }
+
+        int stock = -1;
+        while (stock < 0) {
+            System.out.print("Stock: ");
+            try {
+                stock = Integer.parseInt(scanner.nextLine());
+                if (stock < 0) {
+                    System.out.println(" El stock no puede ser negativo.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(" Debes ingresar un número entero válido.");
+            }
+        }
 
         RubroArticulo rubro = null;
 // --- RUBRO ---
@@ -265,7 +340,7 @@ public class Sistema {
             System.out.println(" Ingrese un número válido.");
             return;
         }
-        usuario.agregarSaldo(usuario.getSaldo() + monto);
+        usuario.agregarSaldo(monto);
         GestorArchivos.guardarUsuarios(usuarios);
         System.out.println(" Dinero agregado correctamente. Saldo actual: $" + usuario.getSaldo());
     }
@@ -286,7 +361,7 @@ public class Sistema {
     }
     if (usuario.retirarSaldo(monto)) {
         System.out.println(" Dinero retirado correctamente. Saldo actual: $" + usuario.getSaldo());
-        GestorArchivos.guardarArticulos(articulos);
+        GestorArchivos.guardarUsuarios(usuarios);
     } else {
         System.out.println(" Saldo insuficiente.");
     }
@@ -561,4 +636,18 @@ public class Sistema {
             System.out.println("Ingrese un numero valido.");
         }
     }
+
+    public void agregarInicialSiNoExiste(Articulo art) {
+        boolean existe = articulos.stream()
+                .anyMatch(a -> a.getCodigo().equalsIgnoreCase(art.getCodigo()));
+
+        if (!existe) {
+            articulos.add(art);
+        }
+    }
+
+    public void guardarArticulos() {
+        GestorArchivos.guardarArticulos(articulos);
+    }
+
 }

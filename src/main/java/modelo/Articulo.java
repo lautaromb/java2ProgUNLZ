@@ -8,18 +8,49 @@ public class Articulo {
     private int stock;
     private RubroArticulo rubro;
     private TipoArticulo tipo;
-
-    // Para artículos por demanda
     private int stockDeseado;
 
-    public Articulo(String codigo, String descripcion, double precioNeto, int stock, RubroArticulo rubro, TipoArticulo tipo) {
+
+    public Articulo(String codigo, String descripcion, double precioNeto, int stock,
+                    RubroArticulo rubro, TipoArticulo tipo) {
+
+        // VALIDACIONES
+        if (codigo == null || codigo.trim().isEmpty()) {
+            throw new IllegalArgumentException("El código no puede estar vacío.");
+        }
+        if (codigo.length() < 2 || codigo.length() > 6) {
+            throw new IllegalArgumentException("Código no valido.");
+        }
+
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
+
+
+        if (precioNeto < 0.25) {
+            throw new IllegalArgumentException("El precio no valido.");
+        }
+
+        if (stock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser menor a 0.");
+        }
+
+        if (rubro == null) {
+            throw new IllegalArgumentException("El rubro no puede ser null.");
+        }
+
+        if (tipo == null) {
+            throw new IllegalArgumentException("El tipo de artículo no puede ser null.");
+        }
+
+        // ASIGNACIÓN
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.precioNeto = precioNeto;
         this.stock = stock;
         this.rubro = rubro;
         this.tipo = tipo;
-        this.stockDeseado = 0; // Solo se usa si el tipo es POR_DEMANDA
+        this.stockDeseado = 0;
     }
 
     public String getCodigo() {
@@ -48,6 +79,9 @@ public class Articulo {
     }
 
     public void setStock(int nuevoStock) {
+        if (nuevoStock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo.");
+        }
         this.stock = nuevoStock;
     }
 
@@ -64,23 +98,32 @@ public class Articulo {
     }
 
     public void setStockDeseado(int stockDeseado) {
+        if (stockDeseado < 0) {
+            throw new IllegalArgumentException("El stock deseado no puede ser negativo.");
+        }
         this.stockDeseado = stockDeseado;
     }
 
     @Override
     public String toString() {
         return codigo + " - " + getDescripcion() +
-                " | Precio: $" + getPrecioFinal() +
-                " | Stock: " + stock +
-                " | Rubro: " + rubro.getNombreConLetra() +
-                " | Tipo: " + tipo.name();
+                "  Precio: $" + getPrecioFinal() +
+                "  Stock: " + stock +
+                "  Rubro: " + rubro.getNombreConLetra() +
+                "  Tipo: " + tipo.name();
     }
 
     public void setDescripcion(String descripcion) {
+        if (descripcion == null || descripcion.trim().isEmpty()) {
+            throw new IllegalArgumentException("La descripción no puede estar vacía.");
+        }
         this.descripcion = descripcion;
     }
 
     public void setPrecioNeto(double precioNeto) {
+        if (precioNeto < 0) {
+            throw new IllegalArgumentException("El precio no puede ser negativo.");
+        }
         this.precioNeto = precioNeto;
     }
 

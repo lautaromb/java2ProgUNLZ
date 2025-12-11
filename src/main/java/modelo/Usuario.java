@@ -7,6 +7,17 @@ public abstract class Usuario {
     protected double saldo;
 
     public Usuario(String nombreUsuario, String contrasena) {
+
+        // Validación de nombre
+        if (nombreUsuario == null || nombreUsuario.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre de usuario no puede estar vacío.");
+        }
+
+        // Validación de contraseña
+        if (contrasena == null || contrasena.trim().isEmpty()) {
+            throw new IllegalArgumentException("La contraseña no puede estar vacía.");
+        }
+
         this.nombreUsuario = nombreUsuario;
         this.contrasena = contrasena;
         this.saldo = 0.0;
@@ -36,7 +47,7 @@ public abstract class Usuario {
         return false;
     }
 
-    public String getContrasena(){
+    public String getContrasena() {
         return contrasena;
     }
 

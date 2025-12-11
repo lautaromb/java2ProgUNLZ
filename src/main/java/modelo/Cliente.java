@@ -31,7 +31,7 @@ public class Cliente extends Usuario{
             System.out.println("No tiene compras registradas.");
             return;
         }
-        System.out.println("\n=== HISTORIAL DE COMPRAS ===");
+        System.out.println("\n HISTORIAL DE COMPRAS ");
         for (int i = 0; i < historialCompras.size(); i++) {
             System.out.println((i + 1) + ". " + historialCompras.get(i));
         }
